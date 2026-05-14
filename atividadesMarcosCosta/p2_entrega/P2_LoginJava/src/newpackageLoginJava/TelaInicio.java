@@ -1,0 +1,141 @@
+
+package newpackageLoginJava;
+
+import java.awt.HeadlessException;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+
+
+public class TelaInicio extends JFrame {
+    private final JPanel tela;
+    
+    
+    //atributo que faremos para validar a exclusão
+    private boolean exclusaoValida;
+    
+    public TelaInicio() {
+        
+        setLocationRelativeTo (null);
+        setResizable(false);
+        setTitle ("TELA INÍCIO");
+        
+        setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        setBounds (500, 200, 426, 212);
+        
+        tela = new JPanel ();
+        tela.setBackground(SystemColor.orange);
+        setContentPane(tela);
+        tela.setLayout (null);
+        
+        //concatenando o label com o atributo global nome da classe Usuario
+        JLabel lblUsuario = new JLabel ("BEM VINDO, " + Usuario.nomeUsuario);
+        lblUsuario.setBounds(24, 65, 200, 15);
+        tela.add(lblUsuario);
+        
+        JButton btnExcluir = new JButton ("Excluir");
+        btnExcluir.setBounds(2, 130, 117, 25);
+        tela.add (btnExcluir);
+        
+        JButton btnAlterar = new JButton ("Alterar Dados");
+        btnAlterar.setBounds (150, 130, 117, 25);
+        tela.add(btnAlterar);
+        
+        JButton btnVoltar = new JButton ("Voltar");
+        btnVoltar.setBounds(300, 130, 117, 25);
+        tela.add(btnVoltar);
+        
+        
+        btnVoltar.addActionListener ((ActionEvent e) -> {
+            try{
+               TelaLogin telaLogin = new TelaLogin ();
+               telaLogin.setVisible (true);
+               dispose ();
+                                    
+            }catch (Exception ec) {
+            System.out.println("Erro ao acessar a tela de login "
+                    + ec.getMessage());
+            }
+        });
+        
+     btnAlterar.addActionListener ((ActionEvent e) -> {
+         try {
+             TelaAlteracao telaAlterar = new TelaAlteracao();
+             telaAlterar.setVisible(true);
+             dispose();
+             
+         }catch (Exception ec) {
+             System.out.println("Erro ao acessar a tela de alteração"
+                       + ec.getMessage());
+         }
+         
+     });
+     
+     btnExcluir.addActionListener ((ActionEvent e) -> {
+         try{
+             //array que recebe as opções
+             Object[] options = { "sim", "não" };
+             int opcao = JOptionPane.showOptionDialog(null,
+                     Usuario.nomeUsuario +
+                             ", Deseja se excluir ?", "Atenção",
+                             JOptionPane.DEFAULT_OPTION,
+                             JOptionPane.QUESTION_MESSAGE, null,
+                             options, options [0]);
+             
+             if (opcao == 0) {
+                 //excluir o usuario
+                 //instancio a classe usuario
+                 Usuario usu = new Usuario ();
+                 
+                 exclusaoValida = 
+                         usu.excluirUsuario(Usuario.usuarioSistema);
+                 
+                 if (exclusaoValida == true) {
+                     
+                     //Usuario excluido na base de dados
+                     JOptionPane.showMessageDialog(null,
+                             "Usuario deletado corretamente, voltaremos "
+                                        + "a tela de login",
+                             "ATENÇÃO",
+                                JOptionPane.INFORMATION_MESSAGE);
+                     
+                    //Abrimos a tela de Login novamente
+                    TelaLogin tLogin = new TelaLogin();
+                    tLogin.abreTela();
+                    dispose();
+                    
+                 }else{
+                     JOptionPane.showMessageDialog(null,
+                             "Problemas ao excluir o usuário",
+                             "Atenção",
+                             JOptionPane.ERROR_MESSAGE);       
+                 }
+  
+              
+             }
+             
+            }catch (HeadlessException ec) {
+                     System.out.println("Erro ao excluir usuario "
+                                        + ec.getMessage());
+                                        
+         }    
+     });
+     
+      
+      }  
+    
+    public void AbreTela(){
+          TelaInicio telaInicio = new TelaInicio ();
+          telaInicio.setVisible (true);
+          
+            
+    }
+    
+   
+    
+}
